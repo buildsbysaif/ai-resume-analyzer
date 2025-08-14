@@ -1,10 +1,10 @@
 # AI Resume Analyzer 
 
-**Live Demo:** [Your Live Netlify URL Here]
+**Live Demo:** [Click Here to View Live Demo](https://ai-resume-analyzer-buildsbysaif.netlify.app/)
 
 An intelligent tool designed to bridge the gap between a candidate's resume and a potential job, providing instant, actionable feedback to help job seekers land their next role.
 
-![AI Resume Analyzer Demo GIF](your-gif-link-here.gif)
+![AI Resume Analyzer Demo GIF](frontend/assets/demo.gif)
 
 ## Inspiration & Purpose
 
@@ -44,7 +44,7 @@ Building this project was a fantastic learning experience, especially in overcom
 To run this project on your own machine, follow these steps:
 
 1.  Clone the repository:
-    `git clone https://github.com/your-username/ai-resume-analyzer.git`
+    `git clone https://github.com/buildsbysaif/ai-resume-analyzer.git`
 2.  Navigate to the backend directory:
     `cd ai-resume-analyzer/backend`
 3.  Create and activate a Python virtual environment.
