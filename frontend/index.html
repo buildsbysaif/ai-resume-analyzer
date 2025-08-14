@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Analyzer</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <main>
+        <img src="assets/logo.png" alt="AI Resume Analyzer Logo" id="logo">
+        <h1>AI Resume Analyzer</h1>
+        <p>Upload or paste your resume and a job description to receive a detailed analysis, including categorized skills and actionable feedback.</p>
+        <div class="io-container">
+            <div class="card">
+                <h2>Your Inputs</h2>
+                <div class="input-section">
+                    <label>📄 Your Resume</label>
+                    <div class="tab-container" id="resume-tabs">
+                        <button class="tab-button active" data-for="resume-pdf">Upload PDF</button>
+                        <button class="tab-button" data-for="resume-text">Paste Text</button>
+                    </div>
+                    <div id="resume-input-pdf" class="tab-content active">
+                        <input type="file" id="resume-file-input" accept=".pdf">
+                        <div class="file-info">
+                            <span id="resume-file-name" class="file-name">No file selected</span>
+                            <button id="resume-clear-btn" class="clear-btn hidden">&times;</button>
+                        </div>
+                    </div>
+                    <div id="resume-input-text" class="tab-content hidden"><textarea id="resume-textarea" placeholder="Paste your resume text here..."></textarea></div>
+                </div>
+                <div class="input-section">
+                    <label>📄 Job Description</label>
+                    <div class="tab-container" id="jd-tabs">
+                        <button class="tab-button active" data-for="jd-pdf">Upload PDF</button>
+                        <button class="tab-button" data-for="jd-text">Paste Text</button>
+                    </div>
+                    <div id="jd-input-pdf" class="tab-content active">
+                        <input type="file" id="jd-file-input" accept=".pdf">
+                        <div class="file-info">
+                            <span id="jd-file-name" class="file-name">No file selected</span>
+                            <button id="jd-clear-btn" class="clear-btn hidden">&times;</button>
+                        </div>
+                    </div>
+                    <div id="jd-input-text" class="tab-content hidden"><textarea id="jd-textarea" placeholder="Paste the job description text here..."></textarea></div>
+                </div>
+            </div>
+
+            <div class="card" id="results-card">
+                <h2>Analysis Results</h2>
+                <button id="export-btn" class="hidden">Export as PDF</button>
+                <div id="results-placeholder"><p>Your results will appear here once the analysis is complete.</p></div>
+                <div id="results-container" class="hidden">
+                    <div id="score-card">
+                        <p>Your Match Score</p>
+                        <div class="chart-container">
+                            <canvas id="scoreChart"></canvas>
+                            <span id="score">--%</span>
+                        </div>
+                    </div>
+                    <div class="skills-section">
+                        <h4>✅ Matched Skills</h4>
+                        <ul id="matched-skills" class="skills-list"></ul>
+                    </div>
+                    <div class="skills-section">
+                        <h4>❌ Missing Skills</h4>
+                        <ul id="missing-skills" class="skills-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="button-container">
+            <button id="analyze-btn"><span id="button-text">Analyze</span><div id="loading-spinner" class="spinner hidden"></div></button>
+        </div>
+        <div id="skill-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <button id="modal-close-btn" class="modal-close">&times;</button>
+                <h3 id="modal-title"></h3>
+                <p id="modal-description"></p>
+                <a id="modal-link" href="#" target="_blank" rel="noopener noreferrer">
+                    <button>Learn More</button>
+                </a>
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
