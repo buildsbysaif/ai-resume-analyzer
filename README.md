@@ -1,4 +1,4 @@
-# AI Resume Analyzer 📄✨
+# AI Resume Analyzer 
 
 **Live Demo:** [Your Live Netlify URL Here]
 

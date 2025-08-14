@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         exportBtn.classList.add('hidden');
         resultsPlaceholder.classList.remove('hidden');
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/analyze', { method: 'POST', body: formData });
+            const response = await fetch('https://ai-resume-analyzer-backend-53pp.onrender.com/api/analyze', { method: 'POST', body: formData });
             const result = await response.json();
             if (!response.ok) { throw new Error(result.error || `HTTP error! status: ${response.status}`); }
             displayResults(result);
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modalLink.classList.add('hidden');
         openModal();
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/skill_info', {
+            const response = await fetch('https://ai-resume-analyzer-backend-53pp.onrender.com/api/skill_info', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ skill: skillName })
