@@ -1,62 +1,94 @@
-# AI Resume Analyzer 
+# 📄 AI Resume Analyzer 
 
-**Live Demo:** [Click Here to View Live Demo](https://ai-resume-analyzer-buildsbysaif.netlify.app/)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg)](https://ai-resume-analyzer-buildsbysaif.netlify.app/)
+[![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-Backend-black.svg)](https://flask.palletsprojects.com/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
-An intelligent tool designed to bridge the gap between a candidate's resume and a potential job, providing instant, actionable feedback to help job seekers land their next role.
+An intelligent, full-stack application designed to bridge the gap between a candidate's resume and a potential job description, providing instant, actionable feedback to help job seekers optimize their applications.
 
 ![AI Resume Analyzer Demo GIF](frontend/assets/demo.gif)
 
-## Inspiration & Purpose
+## 💡 The "Why" Behind the Project
 
-As a final-year student preparing for placements, I found myself spending hours manually comparing my resume to different job descriptions, trying to figure out which key skills were missing. It was a repetitive and time-consuming process. This personal pain point sparked the idea for the AI Resume Analyzer: a practical tool to automate this analysis, saving time and providing clear, data-driven insights. My goal was to build a full-stack application that not only solved a real problem for myself and my peers but also allowed me to deepen my skills in backend development and AI API integration.
+While preparing for technical placements, I spent hours manually cross-referencing my resume against various job descriptions to identify missing keywords. I realized this repetitive process could be automated. I built the AI Resume Analyzer to solve this real-world pain point, providing data-driven insights while simultaneously deepening my expertise in full-stack development, API integration, and application deployment. 
 
-## Key Features
+## ✨ Key Features
 
-* **Flexible Inputs:** Users can either upload a PDF or paste raw text for both their resume and the job description.
-* **AI-Powered Analysis:** Leverages the Google Gemini API to perform a deep semantic analysis, calculating a match score.
-* **Skill Gap Identification:** Intelligently extracts and displays both matched and missing skills from the job description.
-* **Interactive UI:** Features a dynamic score chart built with Chart.js and a professional, responsive user interface.
-* **Clickable Learning Resources:** Missing skills are clickable, opening a pop-up with an AI-generated description and a link to a learning resource.
-* **PDF Export:** Users can download a formatted PDF report of their analysis for their records.
+* **Flexible Data Parsing:** Seamlessly accepts both PDF uploads and raw text inputs for resumes and job descriptions using PyMuPDF.
+* **Semantic AI Analysis:** Leverages the **Google Gemini AI API** to perform deep contextual comparisons rather than simple keyword matching, generating an accurate compatibility score.
+* **Actionable Skill Gap Identification:** Intelligently categorizes and extracts both matched skills and critical missing requirements.
+* **Interactive Data Visualization:** Features a dynamic, responsive UI with a visual score breakdown powered by Chart.js.
+* **Integrated Learning Paths:** Missing skills are clickable, triggering an AI-generated concise definition and fetching a high-quality tutorial link to encourage immediate upskilling.
+* **Automated PDF Reporting:** Users can export a cleanly formatted PDF report of their analysis (via jsPDF) for future reference.
 
-## Tech Stack
+## 🛠️ Technical Architecture
 
-| Category      | Technologies                                       |
-| ------------- | -------------------------------------------------- |
-| **Frontend**  | HTML5, CSS3, Vanilla JavaScript, Chart.js, jsPDF   |
-| **Backend**   | Python, Flask, Gunicorn                            |
-| **AI API**    | Google Gemini API                                  |
-| **Libraries** | PyMuPDF (for PDF parsing)                          |
-| **Deployment**| Frontend on Netlify, Backend on Render             |
+| Component      | Technologies Used                                      |
+| -------------- | ------------------------------------------------------ |
+| **Frontend**   | HTML5, CSS3, Vanilla JavaScript, Chart.js, jsPDF       |
+| **Backend**    | Python, Flask, Gunicorn, PyMuPDF                       |
+| **AI Engine**  | Google Gemini API (`google-genai` SDK)                 |
+| **Deployment** | Netlify (Frontend UI), Render (Backend API)            |
 
-## Challenges & Learnings
+## 📁 Folder Structure
 
-Building this project was a fantastic learning experience, especially in overcoming real-world development hurdles.
+```text
+📦 ai-resume-analyzer
+├── 📂 backend/
+│   ├── 📄 .env                 # Environment variables (API Key)
+│   ├── 📄 app.py               # Main Flask application & API routes
+│   └── 📄 requirements.txt     # Python dependencies
+├── 📂 frontend/
+│   ├── 📂 assets/              # Demo GIFs and images
+│   ├── 📄 index.html           # Main user interface
+│   ├── 📄 script.js            # Frontend logic & state management
+│   └── 📄 style.css            # UI styling
+├── 📄 .gitignore               # Files to ignore in Git
+└── 📄 README.md                # Project documentation
 
-* **Pivoting Between AI Services:** My initial plan was to use a free, open-source model via the Hugging Face Inference API. However, I ran into persistent and difficult-to-diagnose `404 Not Found` errors, even with verified model URLs. This was a significant challenge that taught me the importance of robustly debugging third-party APIs. After confirming my code was correct, I made the pragmatic decision to pivot. I successfully refactored the backend to integrate the Google Gemini API, which proved to be far more stable and reliable for this project's needs. This experience was a powerful lesson in adaptability.
 
-* **Debugging Local Environment Issues:** At one point, my running server in debug mode would receive no requests from the browser, causing the app to hang. After a thorough investigation, I discovered the root cause was not my code, but my local antivirus software silently blocking the connection. This taught me to consider the entire development environment—not just the code—when troubleshooting, a crucial lesson for any developer.
+## 🚧 Challenges Overcome & Technical Learnings
 
-* **Frontend Data Handling:** Implementing the PDF export feature was a great challenge. I learned how to store the API response in a state variable on the frontend, which could then be accessed by a separate function to generate a report with jsPDF and jsPDF-AutoTable, creating structured tables from the skill data.
+Building this application provided hands-on experience in debugging complex, real-world systems:
 
-## Local Setup
+* **API Stability & Migration:** Initially experimented with open-source models via the Hugging Face Inference API but encountered persistent routing errors. I pivoted to the Google Gemini API for superior stability. Recently, I proactively migrated the backend from the deprecated `google-generativeai` package to the modern `google-genai` SDK to resolve breaking changes and ensure long-term application health.
+* **Environment & Network Debugging:** Diagnosed a critical issue where the local Flask server would hang without receiving requests. Traced the root cause to local antivirus software silently blocking the port, reinforcing the importance of checking the entire network environment, not just the codebase.
+* **State Management in Vanilla JS:** Engineered a solution to temporarily store the backend AI JSON response in the frontend state, allowing a separate asynchronous function to parse the data into structured tables for the PDF export feature.
 
-To run this project on your own machine, follow these steps:
+## 💻 Local Setup & Installation
 
-1.  Clone the repository:
-    `git clone https://github.com/buildsbysaif/ai-resume-analyzer.git`
-2.  Navigate to the backend directory:
-    `cd ai-resume-analyzer/backend`
-3.  Create and activate a Python virtual environment.
-4.  Install the required dependencies:
-    `pip install -r requirements.txt`
-5.  Create a `.env` file in the `backend` folder and add your Google API Key:
-    `GOOGLE_API_KEY="your_api_key_here"`
-6.  Run the Flask server:
-    `python app.py`
-7.  Open the `frontend/index.html` file in your browser to use the application.
+```bash
+# To run this application locally, ensure you have Python installed, then follow these steps:
 
-## Future Improvements
+# 1. Clone the repository:
+git clone [https://github.com/buildsbysaif/ai-resume-analyzer.git](https://github.com/buildsbysaif/ai-resume-analyzer.git)
 
-* Implement user accounts to allow users to save and track their analysis history for different jobs.
-* Add a feature to generate a custom cover letter snippet based on the matched skills.
+# 2. Navigate to the backend directory:
+cd ai-resume-analyzer/backend
+
+# 3. Set up the virtual environment:
+python -m venv .venv
+
+# 4. Activate the virtual environment (Windows):
+source .venv/Scripts/activate  
+# (Or use this command if on Mac/Linux):
+# source .venv/bin/activate    
+
+# 5. Install dependencies:
+pip install -r requirements.txt
+
+# 6. Configure Environment Variables:
+# Create a .env file to hold your Google Gemini API key:
+echo 'GOOGLE_API_KEY="your_actual_api_key_here"' > .env
+
+# 7. Start the backend server:
+python app.py
+
+# 8. Launch the Frontend:
+# Open the frontend/index.html file in your preferred web browser to use the app.
+
+## 🚀 Future Improvements
+
+* Implement JWT-based user authentication to allow users to save and track their analysis history over time.
+* Integrate an automated cover letter snippet generator tailored to the specifically matched skills.

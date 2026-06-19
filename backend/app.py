@@ -1,11 +1,9 @@
-
-
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 import json
-import google.generativeai as genai
+from google import genai
 import fitz  
 
 load_dotenv()
@@ -13,16 +11,16 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app) 
 
-
+# --- Initialize the NEW Google GenAI Client ---
+client = None
 try:
     api_key = os.getenv("GOOGLE_API_KEY")
     if not api_key:
         raise ValueError("GOOGLE_API_KEY not found in .env file.")
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    client = genai.Client(api_key=api_key)
 except Exception as e:
     print(f"Error initializing Google Gemini client: {e}")
-    model = None
+
 
 def extract_text_from_pdf(pdf_file):
     """Reads a PDF file stream and returns its text content."""
@@ -51,9 +49,15 @@ def generate_analysis_prompt_google(resume_text, job_description_text):
     ---
     """
 
+# --- Health Check Route to prevent 404 on your root URL ---
+@app.route('/', methods=['GET'])
+def health_check():
+    return jsonify({"status": "Success", "message": "Resume Analyzer API is running successfully!"}), 200
+
+
 @app.route('/api/analyze', methods=['POST'])
 def analyze_skills():
-    if not model:
+    if not client:
         return jsonify({"error": "Google Gemini client not initialized. Check your API key."}), 500
 
     # --- Handle both PDF and Text for Resume ---
@@ -82,7 +86,12 @@ def analyze_skills():
     
     try:
         prompt = generate_analysis_prompt_google(resume_text, job_description_text)
-        response = model.generate_content(prompt)
+        
+        # --- NEW SDK REQUEST LOGIC ---
+        response = client.models.generate_content(
+            model='gemini-1.5-flash',
+            contents=prompt
+        )
         
         response_text = response.text
         json_start_index = response_text.find('{')
@@ -106,8 +115,6 @@ def analyze_skills():
         return jsonify({"error": "An error occurred while processing the analysis."}), 500
 
 
-
-
 def generate_skill_prompt_google(skill_name):
     """Creates a prompt to get info about a specific skill."""
     return f"""
@@ -123,7 +130,7 @@ def generate_skill_prompt_google(skill_name):
 
 @app.route('/api/skill_info', methods=['POST'])
 def get_skill_info():
-    if not model:
+    if not client:
         return jsonify({"error": "Google Gemini client not initialized."}), 500
     
     data = request.json
@@ -134,12 +141,19 @@ def get_skill_info():
 
     try:
         prompt = generate_skill_prompt_google(skill_name)
-        response = model.generate_content(prompt)
+        
+        # --- NEW SDK REQUEST LOGIC ---
+        response = client.models.generate_content(
+            model='gemini-1.5-flash',
+            contents=prompt
+        )
+        
         response_text = response.text
         json_start_index = response_text.find('{')
         json_end_index = response_text.rfind('}') + 1
         json_string = response_text[json_start_index:json_end_index]
         result_json = json.loads(json_string)
+        
         return jsonify(result_json)
     
     except Exception as e:
