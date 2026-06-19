@@ -46,7 +46,7 @@ While preparing for technical placements, I spent hours manually cross-referenci
 │   └── 📄 style.css            # UI styling
 ├── 📄 .gitignore               # Files to ignore in Git
 └── 📄 README.md                # Project documentation
-
+```
 
 ## 🚧 Challenges Overcome & Technical Learnings
 
@@ -58,37 +58,73 @@ Building this application provided hands-on experience in debugging complex, rea
 
 ## 💻 Local Setup & Installation
 
-```bash
+
 # To run this application locally, ensure you have Python installed, then follow these steps:
 
+### Prerequisites
+- Python 3.10+
+- Git
+- Google Gemini API Key
+
 # 1. Clone the repository:
+```bash
 git clone [https://github.com/buildsbysaif/ai-resume-analyzer.git](https://github.com/buildsbysaif/ai-resume-analyzer.git)
 
-# 2. Navigate to the backend directory:
-cd ai-resume-analyzer/backend
+```
 
-# 3. Set up the virtual environment:
+### 2. Create a Virtual Environment
+
+```bash
 python -m venv .venv
+```
 
-# 4. Activate the virtual environment (Windows):
-source .venv/Scripts/activate  
-# (Or use this command if on Mac/Linux):
-# source .venv/bin/activate    
+### 3. Activate the Virtual Environment
 
-# 5. Install dependencies:
+**Windows**
+
+```bash
+.venv\Scripts\activate
+```
+
+**Mac/Linux**
+
+```bash
+source .venv/bin/activate
+```
+
+### 4. Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-# 6. Configure Environment Variables:
-# Create a .env file to hold your Google Gemini API key:
-echo 'GOOGLE_API_KEY="your_actual_api_key_here"' > .env
+### 5. Configure Environment Variables
 
-# 7. Start the backend server:
+Create a `.env` file inside the backend directory:
+
+```env
+GOOGLE_API_KEY=your_actual_api_key_here
+```
+
+### 6. Start the Backend Server
+
+```bash
 python app.py
+```
 
-# 8. Launch the Frontend:
-# Open the frontend/index.html file in your preferred web browser to use the app.
+### 7. Launch the Frontend
+
+Open:
+
+```text
+frontend/index.html
+```
+
+in your preferred web browser
+
 
 ## 🚀 Future Improvements
 
 * Implement JWT-based user authentication to allow users to save and track their analysis history over time.
 * Integrate an automated cover letter snippet generator tailored to the specifically matched skills.
+

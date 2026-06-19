@@ -11,7 +11,6 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app) 
 
-# --- Initialize the NEW Google GenAI Client ---
 client = None
 try:
     api_key = os.getenv("GOOGLE_API_KEY")
@@ -49,7 +48,7 @@ def generate_analysis_prompt_google(resume_text, job_description_text):
     ---
     """
 
-# --- Health Check Route to prevent 404 on your root URL ---
+#Health Check Route to prevent 404 on your root URL
 @app.route('/', methods=['GET'])
 def health_check():
     return jsonify({"status": "Success", "message": "Resume Analyzer API is running successfully!"}), 200
@@ -60,7 +59,7 @@ def analyze_skills():
     if not client:
         return jsonify({"error": "Google Gemini client not initialized. Check your API key."}), 500
 
-    # --- Handle both PDF and Text for Resume ---
+    #Handle both PDF and Text for Resume
     resume_text = None
     if 'resume_pdf' in request.files:
         resume_text = extract_text_from_pdf(request.files['resume_pdf'])
@@ -72,7 +71,7 @@ def analyze_skills():
     if not resume_text:
         return jsonify({"error": "Could not get text from the resume input."}), 400
 
-    # ---  Handle both PDF and Text for Job Description ---
+    #Handle both PDF and Text for Job Description
     job_description_text = None
     if 'jd_pdf' in request.files:
         job_description_text = extract_text_from_pdf(request.files['jd_pdf'])
@@ -87,9 +86,9 @@ def analyze_skills():
     try:
         prompt = generate_analysis_prompt_google(resume_text, job_description_text)
         
-        # --- NEW SDK REQUEST LOGIC ---
+        #NEW SDK REQUEST LOGIC
         response = client.models.generate_content(
-            model='gemini-1.5-flash',
+            model='gemini-3.5-flash',
             contents=prompt
         )
         
@@ -142,9 +141,9 @@ def get_skill_info():
     try:
         prompt = generate_skill_prompt_google(skill_name)
         
-        # --- NEW SDK REQUEST LOGIC ---
+        #NEW SDK REQUEST LOGIC
         response = client.models.generate_content(
-            model='gemini-1.5-flash',
+            model='gemini-3.5-flash',
             contents=prompt
         )
         
