@@ -58,15 +58,15 @@ Building this application provided hands-on experience in debugging complex, rea
 
 ## 💻 Local Setup & Installation
 
-
-# To run this application locally, ensure you have Python installed, then follow these steps:
+To run this application locally, ensure you have Python installed, then follow these steps:
 
 ### Prerequisites
 - Python 3.10+
 - Git
 - Google Gemini API Key
 
-# 1. Clone the repository:
+### 1. Clone the repository:
+
 ```bash
 git clone [https://github.com/buildsbysaif/ai-resume-analyzer.git](https://github.com/buildsbysaif/ai-resume-analyzer.git)
 
