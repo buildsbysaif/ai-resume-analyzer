@@ -111,6 +111,11 @@ def analyze_skills():
 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+        error_msg = str(e)
+        
+        if "503" in error_msg or "UNAVAILABLE" in error_msg:
+            return jsonify({"error": "Google's AI servers are currently experiencing high demand. Please wait a minute and try again!"}), 503
+            
         return jsonify({"error": "An error occurred while processing the analysis."}), 500
 
 
