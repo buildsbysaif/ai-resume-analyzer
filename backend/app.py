@@ -1,4 +1,5 @@
 import os
+import time
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -19,7 +20,6 @@ try:
     client = genai.Client(api_key=api_key)
 except Exception as e:
     print(f"Error initializing Google Gemini client: {e}")
-
 
 def extract_text_from_pdf(pdf_file):
     """Reads a PDF file stream and returns its text content."""
@@ -48,49 +48,74 @@ def generate_analysis_prompt_google(resume_text, job_description_text):
     ---
     """
 
-#Health Check Route to prevent 404 on your root URL
+
+def call_gemini_with_fallback(prompt):
+    """
+    Tries multiple Google models to bypass 503 High Demand server outages.
+    """
+    models_to_try = [
+        'gemini-3.1-flash-lite',  
+        'gemini-2.5-flash',      
+        'gemini-3.5-flash'    
+    ]
+    
+    last_exception = None
+    
+    for attempt, model_name in enumerate(models_to_try):
+        try:
+            print(f"Attempting API call with model: {model_name}...")
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt
+            )
+            print(f"✅ Success with {model_name}!")
+            return response
+            
+        except Exception as e:
+            error_msg = str(e)
+            last_exception = e
+            print(f"❌ Failed with {model_name}: {error_msg}")
+            
+            if "503" in error_msg or "UNAVAILABLE" in error_msg or "429" in error_msg:
+                time.sleep(2)
+                continue
+            else:
+                raise e
+                
+    raise Exception("All Gemini models are currently experiencing severe high demand. Google servers are at maximum capacity.")
+
+
+# Health Check Route to prevent 404 on Render 
 @app.route('/', methods=['GET'])
 def health_check():
     return jsonify({"status": "Success", "message": "Resume Analyzer API is running successfully!"}), 200
-
 
 @app.route('/api/analyze', methods=['POST'])
 def analyze_skills():
     if not client:
         return jsonify({"error": "Google Gemini client not initialized. Check your API key."}), 500
 
-    #Handle both PDF and Text for Resume
+    # Handle Resume Input
     resume_text = None
     if 'resume_pdf' in request.files:
         resume_text = extract_text_from_pdf(request.files['resume_pdf'])
     elif 'resume_text' in request.form:
         resume_text = request.form['resume_text']
     else:
-        return jsonify({"error": "Resume (either PDF or text) is required."}), 400
+        return jsonify({"error": "Resume is required."}), 400
 
-    if not resume_text:
-        return jsonify({"error": "Could not get text from the resume input."}), 400
-
-    #Handle both PDF and Text for Job Description
+    # Handle JD Input
     job_description_text = None
     if 'jd_pdf' in request.files:
         job_description_text = extract_text_from_pdf(request.files['jd_pdf'])
     elif 'jd_text' in request.form:
         job_description_text = request.form['jd_text']
     else:
-        return jsonify({"error": "Job description (either PDF or text) is required."}), 400
-
-    if not job_description_text:
-        return jsonify({"error": "Could not get text from the job description input."}), 400
+        return jsonify({"error": "Job description is required."}), 400
     
     try:
         prompt = generate_analysis_prompt_google(resume_text, job_description_text)
-        
-        #NEW SDK REQUEST LOGIC
-        response = client.models.generate_content(
-            model='gemini-3.5-flash',
-            contents=prompt
-        )
+        response = call_gemini_with_fallback(prompt)
         
         response_text = response.text
         json_start_index = response_text.find('{')
@@ -111,19 +136,14 @@ def analyze_skills():
 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-        error_msg = str(e)
-        
-        if "503" in error_msg or "UNAVAILABLE" in error_msg:
-            return jsonify({"error": "Google's AI servers are currently experiencing high demand. Please wait a minute and try again!"}), 503
-            
-        return jsonify({"error": "An error occurred while processing the analysis."}), 500
+        return jsonify({"error": str(e)}), 503
 
 
 def generate_skill_prompt_google(skill_name):
     """Creates a prompt to get info about a specific skill."""
     return f"""
     Provide a concise, one-sentence description for the technical skill "{skill_name}".
-    Then, provide one high-quality, free tutorial link for it (preferably from YouTube, official documentation, or a well-known educational site).
+    Then, provide one high-quality, free tutorial link for it.
     Return ONLY a single minified JSON object with this exact structure:
     {{
       "description": "<one-sentence description>",
@@ -145,12 +165,7 @@ def get_skill_info():
 
     try:
         prompt = generate_skill_prompt_google(skill_name)
-        
-        #NEW SDK REQUEST LOGIC
-        response = client.models.generate_content(
-            model='gemini-3.5-flash',
-            contents=prompt
-        )
+        response = call_gemini_with_fallback(prompt)
         
         response_text = response.text
         json_start_index = response_text.find('{')
@@ -163,7 +178,6 @@ def get_skill_info():
     except Exception as e:
         print(f"An error occurred in get_skill_info: {e}")
         return jsonify({"error": "Failed to get skill information from AI."}), 500
-
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

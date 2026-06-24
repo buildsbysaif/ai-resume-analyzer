@@ -1,4 +1,4 @@
-# 📄 AI Resume Analyzer 
+# 📄 AI Resume Analyzer
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg)](https://ai-resume-analyzer-buildsbysaif.netlify.app/)
 [![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
@@ -9,9 +9,13 @@ An intelligent, full-stack application designed to bridge the gap between a cand
 
 ![AI Resume Analyzer Demo GIF](frontend/assets/demo.gif)
 
+---
+
 ## 💡 The "Why" Behind the Project
 
-While preparing for technical placements, I spent hours manually cross-referencing my resume against various job descriptions to identify missing keywords. I realized this repetitive process could be automated. I built the AI Resume Analyzer to solve this real-world pain point, providing data-driven insights while simultaneously deepening my expertise in full-stack development, API integration, and application deployment. 
+While preparing for technical placements, I spent hours manually cross-referencing my resume against various job descriptions to identify missing keywords. I realized this repetitive process could be automated. I built the AI Resume Analyzer to solve this real-world pain point, providing data-driven insights while simultaneously deepening my expertise in full-stack development, API integration, and application deployment.
+
+---
 
 ## ✨ Key Features
 
@@ -20,111 +24,131 @@ While preparing for technical placements, I spent hours manually cross-referenci
 * **Actionable Skill Gap Identification:** Intelligently categorizes and extracts both matched skills and critical missing requirements.
 * **Interactive Data Visualization:** Features a dynamic, responsive UI with a visual score breakdown powered by Chart.js.
 * **Integrated Learning Paths:** Missing skills are clickable, triggering an AI-generated concise definition and fetching a high-quality tutorial link to encourage immediate upskilling.
-* **Automated PDF Reporting:** Users can export a cleanly formatted PDF report of their analysis (via jsPDF) for future reference.
+* **Automated PDF Reporting:** Users can export a cleanly formatted PDF report of their analysis using jsPDF.
+
+---
 
 ## 🛠️ Technical Architecture
 
-| Component      | Technologies Used                                      |
-| -------------- | ------------------------------------------------------ |
-| **Frontend**   | HTML5, CSS3, Vanilla JavaScript, Chart.js, jsPDF       |
-| **Backend**    | Python, Flask, Gunicorn, PyMuPDF                       |
-| **AI Engine**  | Google Gemini API (`google-genai` SDK)                 |
-| **Deployment** | Netlify (Frontend UI), Render (Backend API)            |
+| Component      | Technologies Used                                |
+| -------------- | ------------------------------------------------ |
+| **Frontend**   | HTML5, CSS3, Vanilla JavaScript, Chart.js, jsPDF |
+| **Backend**    | Python, Flask, Gunicorn, PyMuPDF                 |
+| **AI Engine**  | Google Gemini API (`google-genai` SDK)           |
+| **Deployment** | Netlify (Frontend UI), Render (Backend API)      |
+
+---
 
 ## 📁 Folder Structure
 
 ```text
 📦 ai-resume-analyzer
 ├── 📂 backend/
-│   ├── 📄 .env                 # Environment variables (API Key)
-│   ├── 📄 app.py               # Main Flask application & API routes
-│   └── 📄 requirements.txt     # Python dependencies
+│   ├── 📄 .env
+│   ├── 📄 app.py
+│   └── 📄 requirements.txt
 ├── 📂 frontend/
-│   ├── 📂 assets/              # Demo GIFs and images
-│   ├── 📄 index.html           # Main user interface
-│   ├── 📄 script.js            # Frontend logic & state management
-│   └── 📄 style.css            # UI styling
-├── 📄 .gitignore               # Files to ignore in Git
-└── 📄 README.md                # Project documentation
+│   ├── 📂 assets/
+│   ├── 📄 index.html
+│   ├── 📄 script.js
+│   └── 📄 style.css
+├── 📄 .gitignore
+└── 📄 README.md
 ```
+
+---
 
 ## 🚧 Challenges Overcome & Technical Learnings
 
-Building this application provided hands-on experience in debugging complex, real-world systems:
+### API Stability & Fallback Engineering
 
-* **API Stability & Migration:** Initially experimented with open-source models via the Hugging Face Inference API but encountered persistent routing errors. I pivoted to the Google Gemini API for superior stability. Recently, I proactively migrated the backend from the deprecated `google-generativeai` package to the modern `google-genai` SDK to resolve breaking changes and ensure long-term application health.
-* **Environment & Network Debugging:** Diagnosed a critical issue where the local Flask server would hang without receiving requests. Traced the root cause to local antivirus software silently blocking the port, reinforcing the importance of checking the entire network environment, not just the codebase.
-* **State Management in Vanilla JS:** Engineered a solution to temporarily store the backend AI JSON response in the frontend state, allowing a separate asynchronous function to parse the data into structured tables for the PDF export feature.
+Initially encountered `503 Service Unavailable` errors during periods of high global demand on Google's free-tier Gemini API. To solve this, I engineered an enterprise-style model fallback chain in Python that automatically catches rate-limit errors and reroutes requests to alternative models, ensuring uninterrupted service for end users.
+
+### SDK Migration
+
+Proactively migrated the backend from the deprecated `google-generativeai` package to the modern `google-genai` SDK to resolve breaking changes and ensure long-term maintainability.
+
+### Environment & Network Debugging
+
+Diagnosed a critical issue where the local Flask server would hang without receiving requests. Traced the root cause to local antivirus software silently blocking the port, reinforcing the importance of debugging the full environment rather than only the codebase.
+
+### State Management in Vanilla JavaScript
+
+Engineered a frontend state-management solution to temporarily store AI-generated JSON responses, enabling asynchronous parsing and structured PDF report generation.
+
+---
 
 ## 💻 Local Setup & Installation
 
-To run this application locally, ensure you have Python installed, then follow these steps:
+To run this application locally, ensure Python is installed, then follow these steps.
 
 ### Prerequisites
-- Python 3.10+
-- Git
-- Google Gemini API Key
 
-### 1. Clone the repository:
+* Python 3.10+
+* Git
+* Google Gemini API Key
+
+### 1. Clone the Repository
 
 ```bash
-git clone [https://github.com/buildsbysaif/ai-resume-analyzer.git](https://github.com/buildsbysaif/ai-resume-analyzer.git)
-
+git clone https://github.com/buildsbysaif/ai-resume-analyzer.git
+cd ai-resume-analyzer/backend
 ```
 
-### 2. Create a Virtual Environment
+### 2. Create and Activate a Virtual Environment
+
+#### Windows
 
 ```bash
 python -m venv .venv
+.\.venv\Scripts\activate
 ```
 
-### 3. Activate the Virtual Environment
-
-**Windows**
+#### macOS / Linux
 
 ```bash
-.venv\Scripts\activate
-```
-
-**Mac/Linux**
-
-```bash
+python -m venv .venv
 source .venv/bin/activate
 ```
 
-### 4. Install Dependencies
+### 3. Install Dependencies & Configure Environment
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Configure Environment Variables
-
-Create a `.env` file inside the backend directory:
+Create a `.env` file and add:
 
 ```env
 GOOGLE_API_KEY=your_actual_api_key_here
 ```
 
-### 6. Start the Backend Server
+### 4. Start the Backend Server
 
 ```bash
 python app.py
 ```
 
-### 7. Launch the Frontend
+### 5. Launch the Frontend
 
-Open:
+Open a new terminal window:
 
-```text
-frontend/index.html
+```bash
+cd ai-resume-analyzer/frontend
+python -m http.server 8000
 ```
 
-in your preferred web browser
+Then open:
 
+```text
+http://localhost:8000
+```
+
+in your web browser.
+
+---
 
 ## 🚀 Future Improvements
 
-* Implement JWT-based user authentication to allow users to save and track their analysis history over time.
-* Integrate an automated cover letter snippet generator tailored to the specifically matched skills.
-
+* Implement JWT-based user authentication to allow users to save and track their analysis history.
+* Integrate an AI-powered cover letter generator tailored to the user's matched skills and target role.
